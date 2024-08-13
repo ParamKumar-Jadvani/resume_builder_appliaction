@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:resume_builder_appliaction/views/builder_option_page/builder_option_page.dart';
+import 'package:resume_builder_appliaction/views/splash_screen/splash_screen.dart';
 
+import '../views/builder_option_page/all_options/contact_info/contact_info.dart';
 import '../views/home_page/home_page.dart';
 
 class AppRoutes {
-  static String homePage = '/';
+  static String splashScreen = '/';
+  static String homePage = 'home_page';
   static String builderOptionPage = 'builder_option_page';
   static String iconPath = 'lib/assets/icons/';
   static List<Map<String, dynamic>> allOptions = [
@@ -26,7 +29,9 @@ class AppRoutes {
   ];
 
   static Map<String, Widget Function(BuildContext)> routes = {
+    splashScreen: (context) => const SplashScreen(),
     homePage: (context) => const HomePage(),
     builderOptionPage: (context) => const BuilderOptionPage(),
+    allOptions[0]['route']: (context) => const ContactInfo(),
   };
 }

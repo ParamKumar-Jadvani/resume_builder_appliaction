@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../routes/app_routes.dart';
 
@@ -11,14 +10,6 @@ class BuilderOptionPage extends StatefulWidget {
 }
 
 class _BuilderOptionPageState extends State<BuilderOptionPage> {
-  @override
-  void dispose() {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(statusBarColor: Colors.grey),
-    );
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

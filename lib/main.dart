@@ -1,22 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:resume_builder_appliaction/routes/app_routes.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.grey,
-      statusBarIconBrightness: Brightness.dark,
-    ),
-  );
-
-  SystemChrome.setPreferredOrientations(
-    [
-      DeviceOrientation.portraitUp,
-    ],
-  );
   runApp(
     const MyApp(),
   );

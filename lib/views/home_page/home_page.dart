@@ -11,22 +11,20 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: const Text('Home Page'),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed(AppRoutes.builderOptionPage);
-          },
-          child: const Icon(
-            Icons.add,
-            size: 20,
-            color: Colors.black,
-          ),
+        title: const Text('Home Page'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(AppRoutes.builderOptionPage);
+        },
+        child: const Icon(
+          Icons.add,
+          size: 20,
+          color: Colors.black,
         ),
       ),
     );

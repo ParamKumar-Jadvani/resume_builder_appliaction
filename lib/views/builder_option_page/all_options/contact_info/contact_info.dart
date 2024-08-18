@@ -11,6 +11,13 @@ class ContactInfo extends StatefulWidget {
 class _ContactInfoState extends State<ContactInfo> {
   int index = 0;
   bool hide = true;
+  // String? name, contact, email, password;
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   void setIndex({required int index}) {
     setState(() {
@@ -97,77 +104,137 @@ class _ContactInfoState extends State<ContactInfo> {
                   children: [
                     // Contact Page
                     Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white,
                       ),
                       padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextField(
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              prefixIcon: const Icon(Icons.person),
-                              labelText: 'Name',
-                              hintText: 'Enter Name',
-                            ),
-                          ),
-                          15.h,
-                          TextField(
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              prefixIcon: const Icon(Icons.phone),
-                              labelText: 'Phone',
-                              hintText: 'Enter Phone',
-                            ),
-                          ),
-                          15.h,
-                          TextField(
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              prefixIcon: const Icon(Icons.email),
-                              labelText: 'Email',
-                              hintText: 'Enter Email',
-                            ),
-                          ),
-                          15.h,
-                          TextField(
-                            textInputAction: TextInputAction.done,
-                            keyboardType: hide
-                                ? TextInputType.visiblePassword
-                                : TextInputType.none,
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              hintText: 'Enter Password',
-                              prefixIcon: const Icon(Icons.password),
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  hide = !hide;
-                                  setState(() {});
+                      child: SingleChildScrollView(
+                        child: Form(
+                          key: formKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextFormField(
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter your name';
+                                  }
+                                  return null;
                                 },
-                                icon: Icon(
-                                  hide
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
+                                controller: nameController,
+                                textInputAction: TextInputAction.next,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  prefixIcon: const Icon(Icons.person),
+                                  labelText: 'Name',
+                                  hintText: 'Enter Name',
                                 ),
                               ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
+                              15.h,
+                              TextFormField(
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Enter Number';
+                                  }
+                                  return null;
+                                },
+                                controller: phoneController,
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  prefixIcon: const Icon(Icons.phone),
+                                  labelText: 'Phone',
+                                  hintText: 'Enter Phone',
+                                ),
                               ),
-                            ),
+                              15.h,
+                              TextFormField(
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Enter Email';
+                                  }
+                                  return null;
+                                },
+                                controller: emailController,
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.emailAddress,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  prefixIcon: const Icon(Icons.email),
+                                  labelText: 'Email',
+                                  hintText: 'Enter Email',
+                                ),
+                              ),
+                              15.h,
+                              TextFormField(
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Enter Password';
+                                  }
+                                  return null;
+                                },
+                                controller: passwordController,
+                                textInputAction: TextInputAction.done,
+                                obscureText: hide,
+                                keyboardType: TextInputType.visiblePassword,
+                                decoration: InputDecoration(
+                                  labelText: 'Password',
+                                  hintText: 'Enter Password',
+                                  prefixIcon: const Icon(Icons.password),
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      hide = !hide;
+                                      setState(() {});
+                                    },
+                                    icon: Icon(
+                                      hide
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                              ),
+                              30.h,
+                              Text("Name: ${nameController.text}"),
+                              Text("Contact: ${phoneController.text}"),
+                              Text("Email: ${emailController.text}"),
+                              Text("Password: ${passwordController.text}"),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      nameController.clear();
+                                      emailController.clear();
+                                      passwordController.clear();
+                                      phoneController.clear();
+                                      setState(() {});
+                                    },
+                                    child: const Text("CLEAR"),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      bool validated =
+                                          formKey.currentState!.validate();
+                                    },
+                                    child: const Text("SAVE"),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                     // Photo Page

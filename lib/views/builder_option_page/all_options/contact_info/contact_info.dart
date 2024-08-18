@@ -10,6 +10,8 @@ class ContactInfo extends StatefulWidget {
 
 class _ContactInfoState extends State<ContactInfo> {
   int index = 0;
+  bool hide = true;
+
   void setIndex({required int index}) {
     setState(() {
       this.index = index;
@@ -103,32 +105,66 @@ class _ContactInfoState extends State<ContactInfo> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           TextField(
+                            textInputAction: TextInputAction.next,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
+                              prefixIcon: const Icon(Icons.person),
                               labelText: 'Name',
                               hintText: 'Enter Name',
                             ),
                           ),
                           15.h,
                           TextField(
+                            textInputAction: TextInputAction.next,
+                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
+                              prefixIcon: const Icon(Icons.phone),
+                              labelText: 'Phone',
+                              hintText: 'Enter Phone',
+                            ),
+                          ),
+                          15.h,
+                          TextField(
+                            textInputAction: TextInputAction.next,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              prefixIcon: const Icon(Icons.email),
                               labelText: 'Email',
                               hintText: 'Enter Email',
                             ),
                           ),
                           15.h,
                           TextField(
+                            textInputAction: TextInputAction.done,
+                            keyboardType: hide
+                                ? TextInputType.visiblePassword
+                                : TextInputType.none,
                             decoration: InputDecoration(
+                              labelText: 'Password',
+                              hintText: 'Enter Password',
+                              prefixIcon: const Icon(Icons.password),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  hide = !hide;
+                                  setState(() {});
+                                },
+                                icon: Icon(
+                                  hide
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              labelText: 'Phone',
-                              hintText: 'Enter Phone',
                             ),
                           ),
                         ],

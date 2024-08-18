@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:resume_builder_appliaction/utils/extension.dart';
 
 class ContactInfo extends StatefulWidget {
   const ContactInfo({super.key});
@@ -9,24 +10,10 @@ class ContactInfo extends StatefulWidget {
 
 class _ContactInfoState extends State<ContactInfo> {
   int index = 0;
-  List<Map> colors = [
-    {
-      'name': "RED",
-      'color': Colors.red,
-    },
-    {
-      'name': "GREEN",
-      'color': Colors.green,
-    },
-    {
-      'name': "BLUE",
-      'color': Colors.blue,
-    },
-  ];
-
-  void setIndex(int i) {
-    index = i;
-    setState(() {});
+  void setIndex({required int index}) {
+    setState(() {
+      this.index = index;
+    });
   }
 
   @override
@@ -39,39 +26,126 @@ class _ContactInfoState extends State<ContactInfo> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            IndexedStack(
-              index: index,
-              clipBehavior: Clip.none,
-              alignment: Alignment.center,
-              children: colors
-                  .map(
-                    (e) => Container(
-                      height: 200,
-                      width: 200,
-                      color: e['color'],
-                    ),
-                  )
-                  .toList(),
-            ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: colors
-                  .map(
-                    (e) => ElevatedButton(
-                      onPressed: () {
-                        setIndex(
-                          colors.indexOf(e),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: e['color'],
-                          foregroundColor: Colors.white),
-                      child: Text(e['name']),
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      setIndex(index: 0);
+                    },
+                    child: Container(
+                      height: 60,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.grey,
+                            width: index == 0 ? 5 : 0,
+                          ),
+                        ),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Contact',
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
                     ),
-                  )
-                  .toList(),
+                  ),
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      setIndex(index: 1);
+                    },
+                    child: Container(
+                      height: 60,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.grey,
+                            width: index == 1 ? 5 : 0,
+                          ),
+                        ),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Photo',
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: IndexedStack(
+                  index: index,
+                  children: [
+                    // Contact Page
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextField(
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              labelText: 'Name',
+                              hintText: 'Enter Name',
+                            ),
+                          ),
+                          15.h,
+                          TextField(
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              labelText: 'Email',
+                              hintText: 'Enter Email',
+                            ),
+                          ),
+                          15.h,
+                          TextField(
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              labelText: 'Phone',
+                              hintText: 'Enter Phone',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Photo Page
+                    Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.blueAccent,
+                      ),
+                      child: const Column(
+                        mainAxisSize: MainAxisSize.min,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),

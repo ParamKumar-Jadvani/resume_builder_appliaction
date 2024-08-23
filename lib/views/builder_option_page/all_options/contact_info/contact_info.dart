@@ -1,5 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:resume_builder_appliaction/utils/extension.dart';
+
+import '../../../../utils/globals.dart';
 
 class ContactInfo extends StatefulWidget {
   const ContactInfo({super.key});
@@ -11,12 +17,11 @@ class ContactInfo extends StatefulWidget {
 class _ContactInfoState extends State<ContactInfo> {
   int index = 0;
   bool hide = true;
-  // String? name, contact, email, password;
 
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  static final RegExp emailRedExp = RegExp(
+    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+  );
+
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   void setIndex({required int index}) {
@@ -27,6 +32,7 @@ class _ContactInfoState extends State<ContactInfo> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -111,17 +117,21 @@ class _ContactInfoState extends State<ContactInfo> {
                       child: SingleChildScrollView(
                         child: Form(
                           key: formKey,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               TextFormField(
+                                initialValue: Globals.name,
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'Please enter your name';
                                   }
                                   return null;
                                 },
-                                controller: nameController,
+                                onSaved: (value) {
+                                  Globals.name = value;
+                                },
                                 textInputAction: TextInputAction.next,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
@@ -134,15 +144,24 @@ class _ContactInfoState extends State<ContactInfo> {
                               ),
                               15.h,
                               TextFormField(
+                                initialValue: Globals.contact,
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'Enter Number';
+                                  } else if (value.length < 10) {
+                                    return 'Contact number must be of 10 digits !!';
                                   }
                                   return null;
                                 },
-                                controller: phoneController,
+                                onSaved: (value) {
+                                  Globals.contact = value;
+                                },
+                                maxLength: 10,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
                                 textInputAction: TextInputAction.next,
-                                keyboardType: TextInputType.number,
+                                keyboardType: TextInputType.phone,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(20),
@@ -154,13 +173,18 @@ class _ContactInfoState extends State<ContactInfo> {
                               ),
                               15.h,
                               TextFormField(
+                                initialValue: Globals.email,
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'Enter Email';
+                                  } else if (!emailRedExp.hasMatch(value)) {
+                                    return 'Please enter a valid email address !!';
                                   }
                                   return null;
                                 },
-                                controller: emailController,
+                                onSaved: (value) {
+                                  Globals.email = value;
+                                },
                                 textInputAction: TextInputAction.next,
                                 keyboardType: TextInputType.emailAddress,
                                 decoration: InputDecoration(
@@ -172,61 +196,46 @@ class _ContactInfoState extends State<ContactInfo> {
                                   hintText: 'Enter Email',
                                 ),
                               ),
-                              15.h,
-                              TextFormField(
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Enter Password';
-                                  }
-                                  return null;
-                                },
-                                controller: passwordController,
-                                textInputAction: TextInputAction.done,
-                                obscureText: hide,
-                                keyboardType: TextInputType.visiblePassword,
-                                decoration: InputDecoration(
-                                  labelText: 'Password',
-                                  hintText: 'Enter Password',
-                                  prefixIcon: const Icon(Icons.password),
-                                  suffixIcon: IconButton(
-                                    onPressed: () {
-                                      hide = !hide;
-                                      setState(() {});
-                                    },
-                                    icon: Icon(
-                                      hide
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
-                                    ),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                              ),
                               30.h,
-                              Text("Name: ${nameController.text}"),
-                              Text("Contact: ${phoneController.text}"),
-                              Text("Email: ${emailController.text}"),
-                              Text("Password: ${passwordController.text}"),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   ElevatedButton(
                                     onPressed: () {
-                                      nameController.clear();
-                                      emailController.clear();
-                                      passwordController.clear();
-                                      phoneController.clear();
+                                      formKey.currentState!.reset();
+                                      Globals.name = Globals.email = Globals
+                                          .contact = Globals.password = null;
                                       setState(() {});
                                     },
-                                    child: const Text("CLEAR"),
+                                    child: const Text("RESET"),
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
                                       bool validated =
                                           formKey.currentState!.validate();
+                                      if (validated) {
+                                        formKey.currentState!.save();
+                                        SnackBar snackBar = const SnackBar(
+                                          content: Text(
+                                              "Form Saved Successfully...!!"),
+                                          backgroundColor: Colors.green,
+                                          behavior: SnackBarBehavior.floating,
+                                        );
+
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                      } else {
+                                        SnackBar snackBar = const SnackBar(
+                                          content: Text(
+                                              "Form Submission Failed... !!"),
+                                          backgroundColor: Colors.red,
+                                          behavior: SnackBarBehavior.floating,
+                                        );
+
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                      }
                                     },
                                     child: const Text("SAVE"),
                                   ),
@@ -239,11 +248,36 @@ class _ContactInfoState extends State<ContactInfo> {
                     ),
                     // Photo Page
                     Container(
+                      width: double.infinity,
+                      height: size.height * 0.25,
+                      alignment: Alignment.center,
                       decoration: const BoxDecoration(
                         color: Colors.blueAccent,
                       ),
-                      child: const Column(
-                        mainAxisSize: MainAxisSize.min,
+                      child: Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          CircleAvatar(
+                            radius: 60,
+                            foregroundImage: Globals.image != null
+                                ? FileImage(Globals.image!)
+                                : null,
+                            child: const Text("Add Image"),
+                          ),
+                          FloatingActionButton.small(
+                            onPressed: () async {
+                              ImagePicker imagePicker = ImagePicker();
+                              XFile? file = await imagePicker.pickImage(
+                                  source: ImageSource.camera);
+
+                              if (file != null) {
+                                Globals.image = File(file.path);
+                                setState(() {});
+                              }
+                            },
+                            child: const Icon(Icons.camera),
+                          )
+                        ],
                       ),
                     ),
                   ],
